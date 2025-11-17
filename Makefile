@@ -1,5 +1,7 @@
 NAME		:= helloWindow
 
+UNAME		:= $(shell uname -s)
+
 CXX_C		:= c++
 CXX_FLAGS	:= -Wall -Wextra -Werror
 
@@ -27,12 +29,21 @@ C_BIN		:= \
 			$(addprefix $(BIN_DIR)/, \
 			$(C_SRC:.c=.o))
 
-GL_FLAGS	:= -lGL
-GLFW_FLAGS	:= -lglfw
+ifeq ($(UNAME), Linux)
+	GL_FLAGS	:= -lGL
+	GLFW_FLAGS	:= -lglfw
 
-X11_FLAGS	:= -lX11
+	X11_FLAGS	:= -lX11
 
-LDFLAGS		:= $(GL_FLAGS) $(GLFW_FLAGS) $(X11_FLAGS) -lm
+	LDFLAGS		:= $(GL_FLAGS) $(GLFW_FLAGS) $(X11_FLAGS) -lm
+endif
+
+ifeq ($(UNAME), Darwin)
+	GL_FLAGS	:= -framework OpenGL
+	GLFW_FLAGS	:= -lglfw
+
+	LDFLAGS		:= $(GL_FLAGS) $(GLFW_FLAGS)
+endif
 
 INCLUDE		:= -I$(INC_DIR) -I$(GLAD_DIR) -I$(KHR_DIR)
 
@@ -61,7 +72,13 @@ fclean: clean
 re: fclean all
 
 glinfo:
+ifeq ($(UNAME), Linux)
 	@glxinfo | grep "OpenGL version"
 	@glxinfo | grep "OpenGL renderer"
+endif
+ifeq ($(UNAME), Darwin)
+	@system_profiler SPDisplaysDataType | grep -E "(OpenGL|Metal)"
+endif
+
 
 .PHONY: all run clean fclean re glinfo
