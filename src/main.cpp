@@ -20,13 +20,20 @@ int	main(void)
 		glfwTerminate();
 		return (1);
 	}
-	glfwMakeContextCurrent(window);
 
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return (1);
 	}
+
+	int	width;
+	int	height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
 
 	std::cout << "=== OpenGL Information ===" << std::endl;
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
@@ -34,26 +41,37 @@ int	main(void)
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 	std::cout << "=========================" << std::endl;
-	
-	glViewport(0, 0, 800, 600);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	float	vertices[] =
 	{
+		0.5, 0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
 		-0.5f, -0.5f, 0.0f,
-		0.5, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
+		-0.5f, 0.5f, 0.0f,
+	};
+
+	unsigned int	indices[] =
+	{
+		0, 1, 3,
+		1, 2, 3,
 	};
 
 	unsigned int	VBO;
 	glGenBuffers(1, &VBO);
 
+	unsigned int	EBO;
+	glGenBuffers(1, &EBO);
+
 	unsigned int	VAO;
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
 
@@ -113,6 +131,8 @@ int	main(void)
 	
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -123,7 +143,9 @@ int	main(void)
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
