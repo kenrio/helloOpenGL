@@ -84,6 +84,8 @@ int	main(void)
 	Shader	shader("shader/vertex.glsl", "shader/fragment.glsl");
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	float xOffset = 0.5f;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -93,6 +95,7 @@ int	main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
+		shader.setFloat("offset", xOffset);
 
 		glBindVertexArray(VAO);
 		// glDrawArrays(GL_TRIANGLES, 0, 3);
