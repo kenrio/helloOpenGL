@@ -1,4 +1,4 @@
-NAME		:= helloWindow
+NAME		:= helloOpenGL
 
 UNAME		:= $(shell uname -s)
 
