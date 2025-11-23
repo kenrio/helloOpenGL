@@ -15,6 +15,7 @@ INC_DIR		:= include
 SRC			:= \
 			main.cpp \
 			shader.cpp \
+			stb_image.cpp \
 
 C_SRC		:= \
 			glad.c \
