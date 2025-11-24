@@ -10,6 +10,8 @@
 void	framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void	processInput(GLFWwindow *window);
 
+float mixParam = 0.1;
+
 int	main(void)
 {
 	glfwInit();
@@ -67,10 +69,10 @@ int	main(void)
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int				texWidth, texHeight, nrChannels;
 	unsigned char	*data = stbi_load("texture/container.jpg", &texWidth, &texHeight, &nrChannels, 0);
@@ -102,8 +104,6 @@ int	main(void)
 		std::cerr << "Failed to load texture" << std::endl;
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-
 
 	unsigned int	VBO;
 	glGenBuffers(1, &VBO);
@@ -142,11 +142,12 @@ int	main(void)
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
-
+		
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		
 		shader.use();
+		shader.setFloat("mixParam", mixParam);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
@@ -176,8 +177,22 @@ void	framebuffer_size_callback(GLFWwindow *window, int width, int height)
 
 void	processInput(GLFWwindow *window)
 {
+	
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		mixParam += 0.001f;
+		if (mixParam >= 1.0f)
+			mixParam = 1.0f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		mixParam -= 0.001f;
+		if (mixParam <= 0.0f)
+			mixParam = 0.0f;
+	}
+	
 	return ;
 }
