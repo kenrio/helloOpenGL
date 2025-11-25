@@ -14,7 +14,8 @@ INC_DIR		:= include
 
 SRC			:= \
 			main.cpp \
-			shader.cpp \
+			Shader.cpp \
+			Texture.cpp \
 			stb_image.cpp \
 
 C_SRC		:= \

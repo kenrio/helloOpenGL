@@ -1,4 +1,4 @@
-#include "shader.hpp"
+#include "Shader.hpp"
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
 {
@@ -18,6 +18,8 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
 }
+
+Shader::~Shader() {}
 
 void	Shader::use(void)
 {

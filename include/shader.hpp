@@ -15,6 +15,7 @@ public:
 	unsigned int	ID;
 
 	Shader(std::string vertexPath, std::string fragmentPath);
+	~Shader();
 
 	void	use(void);
 
