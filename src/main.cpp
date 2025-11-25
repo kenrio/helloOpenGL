@@ -1,11 +1,12 @@
 #include <iostream>
 #include <cmath>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shader.hpp"
-#include "stb_image.h"
+#include "glad/glad.h"
+#include "stb_image/stb_image.h"
+
+#include "Shader.hpp"
 
 void	framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void	processInput(GLFWwindow *window);
