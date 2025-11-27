@@ -18,7 +18,11 @@ public:
 	Texture(const std::string &path, bool generateMipmap = true);
 	~Texture();
 
+	void	bind(unsigned int unit = 0) const;
+	void	unbind(void) const;	
+
 private:
+	void	load(const std::string &path, bool generateMipmap);
 
 };
 
