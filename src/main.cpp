@@ -91,15 +91,10 @@ int	main(void)
 
 	glBindVertexArray(0);
 
-	glm::mat4	trans = glm::mat4(1.0f);
-	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-
 	Shader	shader("shader/vertex.glsl", "shader/fragment.glsl");
 	shader.use();
 	shader.setInt("texture1", 0);
 	shader.setInt("texture2", 1);
-	shader.setMat4("transform", trans);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
@@ -110,11 +105,25 @@ int	main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glm::mat4	trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
 		shader.use();
 		texture1.bind(0);
 		texture2.bind(1);
+		shader.setMat4("transform", trans);
 
 		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glm::mat4	trans2 = glm::mat4(1.0f);
+		float		scale = sin(glfwGetTime()) * 0.45f + 0.55f;
+		trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+		trans2 = glm::scale(trans2, glm::vec3(scale, scale, scale));
+		shader.setMat4("transform", trans2);
+
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
