@@ -182,7 +182,9 @@ int	main(void)
 		for (unsigned int i = 0; i < 10; ++i)
 		{
 			glm::mat4	model = glm::mat4(1.0f);
-			float		angle = 20.0f * i + (float)glfwGetTime() * 50.0f;
+			float		angle = 20.0f * i;
+			if (i % 3 == 0)
+				angle += (float)glfwGetTime() * 50.0f;
 
 			model = glm::translate(model, cubePositions[i]);
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
